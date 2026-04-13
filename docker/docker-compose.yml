@@ -1,0 +1,50 @@
+
+version: "3.9"
+services:
+
+  trino:
+    image: trinodb/trino:latest
+    ports: ["8080:8080"]
+    volumes:
+      - ./trino/etc:/etc/trino
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: orders_db
+    volumes:
+      - ./init/postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    ports: ["5432:5432"]
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: crm
+    volumes:
+      - ./init/mysql.sql:/docker-entrypoint-initdb.d/init.sql
+    ports: ["3306:3306"]
+
+  metabase:
+    image: metabase/metabase
+    ports: ["3000:3000"]
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports: ["9090:9090"]
+
+  grafana:
+    image: grafana/grafana
+    ports: ["3001:3000"]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports: ["8081:8080"]
