@@ -61,9 +61,3 @@ MinIO → ADLS
 Keycloak → Azure AD  
 
 ---
-
-## Future Enhancements
-
-- Iceberg support
-- Multi-region failover
-- Query caching
